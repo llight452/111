@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSR Disclosures as Compliance Documents</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--primary:#667eea;--secondary:#764ba2;--accent:#f093fb;--warning:#ffc107;--success:#4caf50;--danger:#f44336;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:#000;color:#fff;overflow-x:hidden;}
+.bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;background:radial-gradient(ellipse at top,#1a1a2e 0%,#0a0a0a 50%,#000 100%);}
+.orb-container{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;overflow:hidden;pointer-events:none;}
+.orb{position:absolute;border-radius:50%;filter:blur(120px);opacity:0;animation:orbFloat 25s infinite ease-in-out;}
+.orb-1{width:600px;height:600px;background:radial-gradient(circle,var(--primary),transparent);top:-20%;left:-10%;}
+.orb-2{width:500px;height:500px;background:radial-gradient(circle,var(--accent),transparent);bottom:-15%;right:-10%;animation-delay:8s;}
+.orb-3{width:400px;height:400px;background:radial-gradient(circle,var(--secondary),transparent);top:40%;right:20%;animation-delay:16s;}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1);opacity:.15;}25%{transform:translate(100px,-150px) scale(1.2);opacity:.25;}50%{transform:translate(-50px,100px) scale(.9);opacity:.2;}75%{transform:translate(150px,50px) scale(1.1);opacity:.18;}}
+.noise{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.03;z-index:1000;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+.container{position:relative;z-index:10;width:100%;}
+section{width:100%;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:60px 80px;opacity:0;transform:translateY(60px);transition:opacity 1.2s cubic-bezier(.25,.46,.45,.94),transform 1.2s cubic-bezier(.25,.46,.45,.94);}
+section.visible{opacity:1;transform:translateY(0);}
+.hero-title{font-size:clamp(2.2rem,5vw,4.5rem);font-weight:900;background:linear-gradient(135deg,#fff 0%,var(--primary) 60%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px;letter-spacing:-.04em;line-height:1.15;text-align:center;animation:titleGlow 3s ease-in-out infinite;}
+.hero-subtitle-small{font-size:.9rem;color:rgba(255,255,255,.45);font-weight:300;margin-bottom:6px;letter-spacing:.05em;text-align:center;}
+@keyframes titleGlow{0%,100%{filter:drop-shadow(0 0 40px rgba(102,126,234,.4));}50%{filter:drop-shadow(0 0 60px rgba(240,147,251,.6));}}
+.team-hero{background:linear-gradient(135deg,rgba(102,126,234,.12) 0%,rgba(118,75,162,.08) 100%);backdrop-filter:blur(30px);border:.5px solid rgba(255,255,255,.15);border-radius:28px;padding:28px 44px;max-width:680px;box-shadow:0 20px 60px rgba(102,126,234,.25),inset 0 1px 0 rgba(255,255,255,.1);text-align:center;margin-top:24px;}
+.team-name{font-size:1.2em;font-weight:700;margin-bottom:10px;background:linear-gradient(135deg,#fff,rgba(255,255,255,.7));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.member-tag{display:inline-block;background:rgba(255,255,255,.08);border:.5px solid rgba(255,255,255,.2);border-radius:16px;padding:7px 18px;font-size:.85em;font-weight:500;}
+.vision-text{margin-top:14px;font-size:.82em;color:rgba(255,255,255,.5);font-style:italic;line-height:1.6;}
+.section-header{font-size:clamp(1.8rem,4vw,3rem);font-weight:800;background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,.75) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:28px;letter-spacing:-.03em;text-align:center;}
+.content-wrapper{max-width:1100px;width:100%;display:flex;flex-direction:column;justify-content:center;}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:16px 0;}
+.stat-card{background:linear-gradient(135deg,rgba(255,255,255,.06) 0%,rgba(255,255,255,.02) 100%);backdrop-filter:blur(20px);border:.5px solid rgba(255,255,255,.12);border-radius:20px;padding:24px 16px;text-align:center;transition:all .5s cubic-bezier(.25,.46,.45,.94);}
+.stat-card:hover{transform:translateY(-8px) scale(1.03);box-shadow:0 20px 50px rgba(102,126,234,.3);}
+.stat-number{font-size:2.4em;font-weight:900;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;}
+.stat-label{font-size:.7em;color:rgba(255,255,255,.55);line-height:1.4;}
+.glass-card{background:linear-gradient(135deg,rgba(255,255,255,.08) 0%,rgba(255,255,255,.02) 100%);backdrop-filter:blur(30px);border:.5px solid rgba(255,255,255,.15);border-radius:20px;padding:22px 26px;margin:10px 0;transition:all .5s ease;}
+.glass-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(102,126,234,.2);}
+.card-title{font-size:1em;font-weight:700;margin-bottom:10px;color:#fff;}
+.card-text{font-size:.84em;line-height:1.6;color:rgba(255,255,255,.72);}
+.key-insight{background:linear-gradient(135deg,rgba(255,193,7,.12) 0%,rgba(255,152,0,.06) 100%);border-left:3px solid var(--warning);border-radius:20px;padding:18px 24px;margin:14px 0;}
+.key-insight-text{font-size:.86em;font-weight:500;color:rgba(255,255,255,.9);line-height:1.6;}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin:12px 0;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:12px 0;}
+ul{list-style:none;margin:6px 0;}
+li{position:relative;padding-left:22px;margin-bottom:8px;color:rgba(255,255,255,.78);line-height:1.5;font-size:.84em;}
+li::before{content:'→';position:absolute;left:0;color:var(--primary);font-weight:700;}
+.option-card{background:linear-gradient(135deg,rgba(255,255,255,.06) 0%,rgba(255,255,255,.02) 100%);backdrop-filter:blur(20px);border:.5px solid rgba(255,255,255,.12);border-radius:18px;padding:16px 22px;margin:10px 0;transition:all .4s ease;display:flex;align-items:flex-start;gap:16px;}
+.option-card:hover{transform:translateX(8px);box-shadow:0 15px 50px rgba(102,126,234,.25);}
+.option-number{min-width:40px;height:40px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:12px;font-weight:800;font-size:.85em;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.option-title{font-size:.92em;font-weight:700;color:#fff;margin-bottom:4px;}
+.option-desc{color:rgba(255,255,255,.6);font-size:.78em;line-height:1.5;}
+.rebuttal{color:var(--warning);font-size:.78em;line-height:1.5;margin-top:6px;}
+.box-green{background:linear-gradient(135deg,rgba(76,175,80,.1) 0%,rgba(76,175,80,.03) 100%);border-left:3px solid var(--success);padding:18px 22px;border-radius:14px;}
+.box-red{background:linear-gradient(135deg,rgba(244,67,54,.1) 0%,rgba(244,67,54,.03) 100%);border-left:3px solid var(--danger);padding:18px 22px;border-radius:14px;}
+.box-title{font-size:.9em;font-weight:700;margin-bottom:8px;color:#fff;}
+.matrix-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.8em;}
+.matrix-table th{background:rgba(102,126,234,.2);border:1px solid rgba(255,255,255,.15);padding:11px 14px;font-weight:600;color:rgba(255,255,255,.9);text-align:center;}
+.matrix-table td{border:1px solid rgba(255,255,255,.1);padding:10px 14px;color:rgba(255,255,255,.75);text-align:center;vertical-align:middle;}
+.c-green{background:linear-gradient(135deg,rgba(76,175,80,.25),rgba(76,175,80,.08)) !important;color:#fff !important;font-weight:700;}
+.c-warn{background:linear-gradient(135deg,rgba(255,193,7,.2),rgba(255,193,7,.05)) !important;color:#fff !important;font-weight:600;}
+.c-red{background:linear-gradient(135deg,rgba(244,67,54,.2),rgba(244,67,54,.05)) !important;color:#fff !important;font-weight:600;}
+.quote-block{border-left:3px solid var(--primary);padding:16px 22px;margin:14px 0;background:rgba(102,126,234,.08);border-radius:0 14px 14px 0;color:rgba(255,255,255,.85);font-size:.9em;line-height:1.65;}
+.fade-in{opacity:0;transform:translateY(40px);transition:opacity 1s ease,transform 1s ease;}
+.fade-in.visible{opacity:1;transform:translateY(0);}
+strong{color:#fff;font-weight:700;}
+.ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 24px;margin-top:12px;}
+.ref-item{font-size:.67em;color:rgba(255,255,255,.6);line-height:1.45;padding:5px 0 5px 14px;border-bottom:.5px solid rgba(255,255,255,.05);text-indent:-14px;}
+@media(max-width:900px){section{padding:40px 24px;}.stats-grid,.grid-2,.grid-3{grid-template-columns:1fr;}.hero-title{font-size:2rem;}.ref-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="bg-canvas"></div>
+<div class="orb-container"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
+<div class="noise"></div>
+<div class="container">
+
+<!-- S1 TITLE -->
+<section class="visible" id="s1" style="text-align:center;">
+  <h1 class="hero-title">CSR Disclosures as<br>Compliance Documents</h1>
+  <p class="hero-subtitle-small">Why Existing Research Cannot Be Trusted as a Guide for Investors or Policymakers</p>
+  <div class="team-hero">
+    <div class="team-name">Andrei Volodin</div>
+    <div style="margin:10px 0;"><div class="member-tag">Research Paper Presentation</div></div>
+    <p class="vision-text">GAO (2020) · Gao et al. (2023) · Ernst et al. (2025) · Yang et al. (2026)</p>
+  </div>
+</section>
+
+<!-- S2 INTRO -->
+<section class="fade-in" id="s2">
+  <div class="content-wrapper">
+    <h2 class="section-header">Introduction</h2>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number">12/14</div>
+        <div class="stat-label">Investors seek ESG<br>only for risk · GAO</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">10/18</div>
+        <div class="stat-label">Companies disclose<br>due to legal obligation</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">p=0.40</div>
+        <div class="stat-label">CSR effect when<br>readability is low</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">2</div>
+        <div class="stat-label">Incompatible theories<br>used simultaneously</div>
+      </div>
+    </div>
+    <div class="quote-block">
+      <strong>Thesis:</strong> CSR reports satisfy regulatory requirements, not inform anyone. Research treating them as reliable signals produces contradictions that should not drive real decisions by investors, policymakers, or consumers.
+    </div>
+    <div class="grid-3" style="margin-top:14px;">
+      <div class="glass-card">
+        <h3 class="card-title">Problem 1</h3>
+        <p class="card-text">Reports function as compliance, not communication</p>
+      </div>
+      <div class="glass-card">
+        <h3 class="card-title">Problem 2</h3>
+        <p class="card-text">Institutional and retail investors are fundamentally different</p>
+      </div>
+      <div class="glass-card">
+        <h3 class="card-title">Problem 3</h3>
+        <p class="card-text">Signaling and affect-as-information theories cannot both apply at same time</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S3 SECTION II -->
+<section class="fade-in" id="s3">
+  <div class="content-wrapper">
+    <h2 class="section-header">CSR Reports as Formal Documents</h2>
+    <div class="grid-2">
+      <div class="box-green">
+        <h3 class="box-title">Why these reports exist</h3>
+        <ul>
+          <li>Institutional investors needed ESG data for risk modeling</li>
+          <li>Policy pushed for standardization</li>
+          <li>10 of 18 companies: legal obligation is primary driver (GAO, 2020)</li>
+        </ul>
+      </div>
+      <div class="box-red">
+        <h3 class="box-title">What readability reveals</h3>
+        <ul>
+          <li>Low readability: CSR performance effect becomes insignificant (Gao et al., 2023)</li>
+          <li>Eye-tracking: low readability pulls attention without improving comprehension</li>
+          <li>If communication mattered, clarity would not be optional</li>
+        </ul>
+      </div>
+    </div>
+    <div class="key-insight" style="margin-top:16px;">
+      <p class="key-insight-text"><strong>Gao et al. (2023) experiment result:</strong> High readability + positive CSR → earnings estimate 2.09, significant (p&lt;0.01). Low readability + positive CSR → earnings estimate 0.50, not significant (p=0.403). Same performance, opposite results.</p>
+    </div>
+  </div>
+</section>
+
+<!-- S4 SECTION III -->
+<section class="fade-in" id="s4">
+  <div class="content-wrapper">
+    <h2 class="section-header">The Institutional vs. Retail Investor Problem</h2>
+    <div class="grid-2">
+      <div class="glass-card">
+        <h3 class="card-title">Institutional investors</h3>
+        <ul>
+          <li>12 of 14: main reason is risk assessment (GAO, 2020)</li>
+          <li>Dedicated teams, multiple data sources</li>
+          <li>Respond to risk-relevant data points</li>
+          <li>Cannot represent retail behavior</li>
+        </ul>
+      </div>
+      <div class="glass-card">
+        <h3 class="card-title">Retail investors</h3>
+        <ul>
+          <li>Respond to reputation and third-party assurance (Ernst et al., 2025)</li>
+          <li>Judgment is perceptual, not analytical</li>
+          <li>Use shortcuts, lack tools to evaluate reports</li>
+        </ul>
+      </div>
+    </div>
+    <div class="key-insight">
+      <p class="key-insight-text"><strong>Yang et al. (2026) — China 2007–2019:</strong> First-time disclosures → +1.5% CAR via signaling. Long-duration continuous → +1.1% CAR via affective identification. Short-duration continuous → no significant reaction. Mixing all three in one sample without controls produces meaningless averages.</p>
+    </div>
+  </div>
+</section>
+
+<!-- S5 SECTION IV -->
+<section class="fade-in" id="s5">
+  <div class="content-wrapper">
+    <h2 class="section-header">Contradictions in Existing Research</h2>
+    <table class="matrix-table">
+      <thead>
+        <tr>
+          <th>Theory</th>
+          <th>Applies to</th>
+          <th>Problem</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align:left;font-weight:600;color:#fff;">Signaling Theory</td>
+          <td class="c-green">First-time disclosures only</td>
+          <td class="c-warn">Cannot explain continuous disclosure reactions</td>
+        </tr>
+        <tr>
+          <td style="text-align:left;font-weight:600;color:#fff;">Affect-as-Information Theory</td>
+          <td class="c-green">Long-duration continuous only</td>
+          <td class="c-warn">Cannot explain first-time disclosure reactions</td>
+        </tr>
+        <tr>
+          <td style="text-align:left;font-weight:600;color:#fff;">Both used together</td>
+          <td class="c-red">Most existing studies</td>
+          <td class="c-red">Findings describe nothing precisely</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="grid-2" style="margin-top:8px;">
+      <div class="glass-card">
+        <h3 class="card-title">Reputation > Report content</h3>
+        <p class="card-text">Ernst et al. (2025): favorable reputation affects investor attribution of motives. Studies claiming to measure disclosure effects are often measuring brand image instead.</p>
+      </div>
+      <div class="glass-card">
+        <h3 class="card-title">Format > Performance</h3>
+        <p class="card-text">Gao et al. (2023): same CSR performance, opposite results depending on readability. Findings cannot transfer across companies with different writing styles.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S6 SECTION V -->
+<section class="fade-in" id="s6">
+  <div class="content-wrapper">
+    <h2 class="section-header">Counterarguments</h2>
+    <div class="option-card">
+      <span class="option-number">CA1</span>
+      <div>
+        <div class="option-title">Institutional investors use reports → they work</div>
+        <div class="rebuttal">Only for risk. One narrow function. GAO found most still sought additional disclosures because existing ones had gaps. If best-equipped users find them insufficient, the argument falls apart.</div>
+      </div>
+    </div>
+    <div class="option-card">
+      <span class="option-number">CA2</span>
+      <div>
+        <div class="option-title">Standardization would fix the problem</div>
+        <div class="rebuttal">GAO: even companies using same GRI framework had inconsistencies. GRI does not always specify calculation methods. Standardized compliance paperwork is still compliance paperwork.</div>
+      </div>
+    </div>
+    <div class="option-card">
+      <span class="option-number">CA3</span>
+      <div>
+        <div class="option-title">Inconsistency is normal in developing fields</div>
+        <div class="rebuttal">These contradictions are structural, not early-stage. Conflating investor populations and applying incompatible theories are design problems. More studies using same approach will not fix them.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S7 CONCLUSION -->
+<section class="fade-in" id="s7">
+  <div class="content-wrapper">
+    <h2 class="section-header">Conclusion</h2>
+    <div class="key-insight">
+      <p class="key-insight-text"><strong>CSR reports check a legal box.</strong> Research treating them as reliable signals has not accounted for conditions under which signals actually work, for whom, and under what circumstances.</p>
+    </div>
+    <div class="grid-3" style="margin-top:16px;">
+      <div class="glass-card">
+        <h3 class="card-title">Reports serve compliance</h3>
+        <p class="card-text">Readability is optional. Clarity would be priority if communication was the real goal.</p>
+      </div>
+      <div class="glass-card">
+        <h3 class="card-title">Research misses investor differences</h3>
+        <p class="card-text">Institutional and retail investors process information completely differently. Mixing them produces findings that describe neither.</p>
+      </div>
+      <div class="glass-card">
+        <h3 class="card-title">Format and reputation dominate</h3>
+        <p class="card-text">Both matter more than actual content. Most studies do not control for either.</p>
+      </div>
+    </div>
+    <div class="grid-2" style="margin-top:8px;">
+      <div class="glass-card">
+        <h3 class="card-title">For policymakers</h3>
+        <p class="card-text">Do not design reform based on this literature. It cannot tell you what actually improves decision-making across the full range of investors.</p>
+      </div>
+      <div class="glass-card">
+        <h3 class="card-title">For future research</h3>
+        <p class="card-text">Investor type, disclosure history, readability, and reputation must be fundamental design variables, not afterthoughts.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S8 REFERENCES -->
+<section class="fade-in" id="s8">
+  <div class="content-wrapper">
+    <h2 class="section-header" style="margin-bottom:10px;">References</h2>
+    <div class="ref-grid">
+      <p class="ref-item">Gao, J., Hartmann, F. G. H., Zhang, M., &amp; Chen, Y. (2023). The impact of CSR performance and CSR disclosure readability on investors earnings estimates. <em>Accounting and Finance, 63</em>(S1), 1157-1186. https://doi.org/10.1111/acfi.12938</p>
+      <p class="ref-item">Ernst, C. A., Kunz, J., Fischer, T. M., &amp; Ludwig, L. M. (2025). Investors reactions to CSR reputation and disclosure assurance: An experimental analysis. <em>Journal of Management and Governance.</em></p>
+      <p class="ref-item">U.S. Government Accountability Office. (2020). <em>Public companies: Disclosure of environmental, social, and governance factors and options to enhance them</em> (GAO-20-530). https://www.gao.gov/assets/710/707967.pdf</p>
+      <p class="ref-item">Yang, Y., Huang, X., Shu, A., &amp; Wang, Y. (2026). Distinct mechanisms of investors reactions to first-time versus continuous CSR disclosures. <em>Accounting and Finance.</em> https://doi.org/10.1111/acfi.70181</p>
+    </div>
+  </div>
+</section>
+
+</div>
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('section').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
